@@ -43,9 +43,10 @@ namespace FLCore
             glfwGetWindowPos(window, &windowPosX, &windowPosY);
             glfwGetWindowSize(window, &windowedWidth, &windowedHeight);
 
-            // Remove window decorations before switching to fullscreen
+            // Remove window decorations and set transparency
             glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
-            
+            glfwSetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+
             // Switch to fullscreen
             glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
         }
@@ -54,8 +55,9 @@ namespace FLCore
             // Switch back to windowed mode
             glfwSetWindowMonitor(window, nullptr, windowPosX, windowPosY, windowedWidth, windowedHeight, GLFW_DONT_CARE);
 
-            // Restore window decorations when switching back to windowed mode
+            // Restore window decorations and transparency
             glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
+            glfwSetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
         }
     }
 

@@ -17,6 +17,7 @@ namespace FLUI
         descriptorPool = inDescriptorPool;
         renderPass = inRenderPass;
         imageCount = inImageCount;
+        bFramebufferResized = true;
 
         // Create ImGui context
         IMGUI_CHECKVERSION();
@@ -63,7 +64,6 @@ namespace FLUI
         ImGui_ImplVulkan_Init(&init_info);
         applyStyle();
     }
-
     void FLUI::applyStyle()
     {
         ImGuiStyle& GuiStyle = ImGui::GetStyle();
@@ -149,35 +149,24 @@ namespace FLUI
         GuiStyle.SeparatorTextPadding           = ImVec2(20,2);
     }
 
-    void FLUI::pushViewportDrawCommands()
+    void FLUI::pushMainDockspace()
     {
-        // Set ImGui window flags
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-                                        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
-                                        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings |
-                                        ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus |
-                                        ImGuiWindowFlags_NoDecoration;
-
-        // Begin a full-screen, borderless window
+        // Create an ImGui dockspace that fills the entire window
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        int width, height;
-        window->getWindowSize(width, height);
-        ImGui::SetNextWindowSize(ImVec2(width, height));  // Set to GLFW window size
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));  // Transparent background
+        ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 
-        if (ImGui::Begin("Fullscreen Transparent Window", nullptr, window_flags))
-        {
-            // Your rendering code here
-        }
+        ImGui::Begin("Dockspace Window", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+    
+        ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
 
         ImGui::End();
-        ImGui::PopStyleColor();
     }
 
     void FLUI::preferedColorPushDrawCommands()
     {
         // Create an ImGui window for recording command buffer
-        if (ImGui::Begin("Command Buffer Recording")) 
+        if (ImGui::Begin("Command Buffer Recording", NULL, ImGuiWindowFlags_AlwaysAutoResize)) 
         {
             // Show color picker for preferedColor
             if (ImGui::ColorEdit4("Preferred Color", (float*)&preferedColor)) 
@@ -204,18 +193,28 @@ namespace FLUI
         ImGui_ImplGlfw_NewFrame();  // If using GLFW
         ImGui::NewFrame();
 
-        pushViewportDrawCommands();
+        pushMainDockspace();
         preferedColorPushDrawCommands();
         ImGui::ShowDemoWindow();
         
         ImGui::Render();  // Render ImGui elements
         // Record ImGui commands in the command buffer
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+        bFramebufferResized = false;
     }
 
     const ImGuiIO& FLUI::getGuiIO() const
     {
         return ImGui::GetIO();
+    }
+
+    void FLUI::onFramebufferResized()
+    {
+        bFramebufferResized = true;
+        int width, height;
+        window->getWindowSize(width, height);
+        // Update ImGui display size so docked windows resize
+        ImGui::GetIO().DisplaySize = ImVec2((float)width, (float)height);
     }
 
     void FLUI::cleanup()

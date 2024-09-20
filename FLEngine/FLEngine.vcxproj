@@ -157,7 +157,6 @@
     <ClCompile Include="Core\UI\imgui\imgui_impl_vulkan.cpp" />
     <ClCompile Include="Core\UI\imgui\imgui_tables.cpp" />
     <ClCompile Include="Core\UI\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Core\UI\UIElement\FLUIElement.cpp" />
     <ClCompile Include="FLEngine.cpp" />
     <ClCompile Include="Utils\FLFileSystem.cpp" />
     <ClCompile Include="Utils\SpirVConverter.cpp" />
@@ -182,10 +181,12 @@
     <ClInclude Include="Core\UI\imgui\imstb_rectpack.h" />
     <ClInclude Include="Core\UI\imgui\imstb_textedit.h" />
     <ClInclude Include="Core\UI\imgui\imstb_truetype.h" />
-    <ClInclude Include="Core\UI\UIElement\FLUIElement.h" />
     <ClInclude Include="Utils\FLFileSystem.h" />
     <ClInclude Include="Utils\FLStatics.h" />
     <ClInclude Include="Utils\SpirVConverter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\UI\UIElement\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

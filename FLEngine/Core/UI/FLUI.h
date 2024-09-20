@@ -17,11 +17,12 @@ namespace FLUI
         void init(FLCore::FLWindow* inWindow, VkInstance inInstance, VkDevice inDevice, VkPhysicalDevice inPhysicalDevice,
             VkQueue inVkQueue, VkCommandPool inCommandPool, VkDescriptorPool inDescriptorPool, VkRenderPass inRenderPass, uint32_t inImageCount);
         void applyStyle();
-        void pushViewportDrawCommands();
+        void pushMainDockspace();
         void preferedColorPushDrawCommands();
         void pushDrawCommands(VkCommandBuffer commandBuffer);
         // Input data
         const ImGuiIO& getGuiIO() const;
+        void onFramebufferResized();
         // Function to adjust colors by applying coefficients
         static ImVec4 AdjustColor(ImVec4 base, float coeff, float alpha = 1.0f) {
             return ImVec4(base.x * coeff, base.y * coeff, base.z * coeff, alpha);
@@ -39,10 +40,11 @@ namespace FLUI
         VkRenderPass renderPass;
         uint32_t imageCount;
 
-        ImVec4 preferedColor = ImVec4(0.031f, 0.063f, 0.125f, 1.000f); // Preferred base color
+        ImVec4 preferedColor = ImVec4(0.000f, 0.063f, 0.125f, 1.000f); // Preferred base color
         ImVec2 viewportPos;
         ImVec2 viewportSize;
         bool bFullscreenMode;
+        bool bFramebufferResized;
         //FLAssetManager assetManagerWidget{};
     };
 }

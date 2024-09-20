@@ -11,6 +11,7 @@ namespace FLCore
         void init(uint32_t width, uint32_t height, GLFWframebuffersizefun resizeCallback);
         void toggleFullscreen(bool bFullscreen);
         void createSurface(VkInstance instance);
+        //void addFramebufferResizeCallback(GLFWframebuffersizefun resizeCallback);
         void cleanup();
         const bool shouldClose() const { return !glfwWindowShouldClose(window); }
         GLFWwindow* getWindow() const { return window; }

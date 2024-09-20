@@ -25,6 +25,7 @@ namespace FLCore {
     void FLApp::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
         auto app = reinterpret_cast<FLApp*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
+        app->UI.onFramebufferResized();
     }
 
     void FLApp::initVulkan() {
